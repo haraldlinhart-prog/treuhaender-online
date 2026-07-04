@@ -758,7 +758,7 @@
       var res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message, service, elapsed })
+        body: JSON.stringify({ name, email, message, service, elapsed, website: document.querySelector('[name="website"]').value })
       });
       if (res.ok) {
         status.className = 'form-status success';

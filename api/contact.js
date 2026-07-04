@@ -1,18 +1,58 @@
 // api/contact.js — Vercel Serverless Function
 // Resend: noreply@pan21.com → treuhaender@pan21.com
 
+// Catches bot-generated random tokens like "bhnkoMfKIhFwMnoUuUHhrL" that are short
+// enough to slide past a simple length check but look nothing like a real word/name:
+// very few vowels AND unnaturally frequent upper/lowercase switching. Both conditions
+// are required together (not just one) specifically to avoid flagging real oddly-cased
+// words — "McDonald" or "PayPal" fail the case-switch check alone but have a normal
+// vowel ratio, so they correctly pass.
+function isGibberish(str) {
+  if (!str) return false;
+  const words = str.split(/\s+/).filter(w => w.length >= 6);
+  const vowelChars = 'aeiouyAEIOUYäöüÄÖÜàáâãåèéêëìíîïòóôõùúûýÀÁÂÃÅÈÉÊËÌÍÎÏÒÓÔÕÙÚÛÝ';
+  for (const word of words) {
+    const letters = word.replace(/[^a-zA-ZäöüÄÖÜßàáâãåèéêëìíîïòóôõùúûýÀÁÂÃÅÈÉÊËÌÍÎÏÒÓÔÕÙÚÛÝ]/g, '');
+    if (letters.length < 6) continue;
+
+    let vowels = 0;
+    for (const ch of letters) if (vowelChars.includes(ch)) vowels++;
+    const vowelRatio = vowels / letters.length;
+
+    let transitions = 0;
+    for (let i = 1; i < letters.length; i++) {
+      const prevUpper = letters[i - 1] === letters[i - 1].toUpperCase() && letters[i - 1] !== letters[i - 1].toLowerCase();
+      const curUpper = letters[i] === letters[i].toUpperCase() && letters[i] !== letters[i].toLowerCase();
+      if (prevUpper !== curUpper) transitions++;
+    }
+    const transitionRatio = transitions / (letters.length - 1);
+
+    if (vowelRatio < 0.2 && transitionRatio > 0.35) return true;
+  }
+  // A single very long no-space token (however "wordlike") is also a bot tell.
+  if (/\S{61,}/.test(str)) return true;
+  return false;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, message, service, elapsed } = req.body || {};
+  const { name, email, message, service, elapsed, website } = req.body || {};
+
+  // Honeypot — hidden field must stay empty. Silent success so bots get no signal.
+  if (website && website.trim() !== '') {
+    return res.status(200).json({ success: true });
+  }
 
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Missing fields' });
   }
   if (elapsed < 3) {
-    return res.status(400).json({ error: 'Too fast' });
+    // Silent success rather than an error — an error response teaches a bot to
+    // just wait longer next time.
+    return res.status(200).json({ success: true });
   }
   if (name.length > 80) {
     return res.status(400).json({ error: 'Invalid name' });
@@ -22,6 +62,11 @@ export default async function handler(req, res) {
     if (w.length > 60) {
       return res.status(400).json({ error: 'Invalid content' });
     }
+  }
+  if (isGibberish(name) || isGibberish(message)) {
+    // Silent success, same as honeypot/timing rejection — no hint to the bot that
+    // it was specifically the content that got it caught.
+    return res.status(200).json({ success: true });
   }
 
   const serviceLabels = {
