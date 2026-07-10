@@ -68,6 +68,14 @@ export default async function handler(req, res) {
     // it was specifically the content that got it caught.
     return res.status(200).json({ success: true });
   }
+  // A real inquiry message is always at least a few words with spaces.
+  // Single unbroken tokens (however "wordlike" their vowel ratio looks) are
+  // a bot tell independent of the vowel/case heuristic above — this catches
+  // random-string bots that happen to land just above the vowelRatio cutoff
+  // (e.g. tokens statistically close to real brand names like "McDonald").
+  if (!/\s/.test(message.trim()) && message.trim().length > 12) {
+    return res.status(200).json({ success: true });
+  }
 
   const serviceLabels = {
     'nominee-gf-gmbh':         'Nominee-Geschäftsführer GmbH',
