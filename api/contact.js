@@ -8,17 +8,25 @@
 // words — "McDonald" or "PayPal" fail the case-switch check alone but have a normal
 // vowel ratio, so they correctly pass.
 function isGibberish(str) {
-  if (!str) return false;
-  const words = str.split(/\s+/).filter(w => w.length >= 6);
+  const trimmed = (str || '').trim();
+
+  // Eine komplette Nachricht, die aus einem einzigen zusammenhängenden Token
+  // mit gemischter Groß-/Kleinschreibung besteht (keine Leerzeichen, keine
+  // Satzzeichen), ist praktisch nie eine echte menschliche Nachricht — auch
+  // wenn der Vokalanteil zufällig hoch genug ist, um die Ratio-Prüfung unten
+  // zu unterlaufen (z.B. durch zufällig viele "y"s).
+  if (/^[a-zA-ZäöüÄÖÜß]{10,40}$/.test(trimmed) && /[a-zäöüß]/.test(trimmed) && /[A-ZÄÖÜ]/.test(trimmed)) {
+    return true;
+  }
+
+  const words = (str || '').split(/\s+/).filter(w => w.length >= 6);
   const vowelChars = 'aeiouyAEIOUYäöüÄÖÜàáâãåèéêëìíîïòóôõùúûýÀÁÂÃÅÈÉÊËÌÍÎÏÒÓÔÕÙÚÛÝ';
   for (const word of words) {
     const letters = word.replace(/[^a-zA-ZäöüÄÖÜßàáâãåèéêëìíîïòóôõùúûýÀÁÂÃÅÈÉÊËÌÍÎÏÒÓÔÕÙÚÛÝ]/g, '');
     if (letters.length < 6) continue;
-
     let vowels = 0;
     for (const ch of letters) if (vowelChars.includes(ch)) vowels++;
     const vowelRatio = vowels / letters.length;
-
     let transitions = 0;
     for (let i = 1; i < letters.length; i++) {
       const prevUpper = letters[i - 1] === letters[i - 1].toUpperCase() && letters[i - 1] !== letters[i - 1].toLowerCase();
@@ -26,11 +34,10 @@ function isGibberish(str) {
       if (prevUpper !== curUpper) transitions++;
     }
     const transitionRatio = transitions / (letters.length - 1);
-
-    if (vowelRatio < 0.2 && transitionRatio > 0.35) return true;
+    const vowelThreshold = letters.length >= 14 ? 0.28 : (letters.length >= 11 ? 0.22 : 0.16);
+    if (vowelRatio < vowelThreshold && transitionRatio > 0.3) return true;
   }
-  // A single very long no-space token (however "wordlike") is also a bot tell.
-  if (/\S{61,}/.test(str)) return true;
+  if (/\S{61,}/.test(str || '')) return true;
   return false;
 }
 
