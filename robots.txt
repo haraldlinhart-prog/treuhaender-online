@@ -30,3 +30,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://www.treuhaender.online/sitemap.xml
+Sitemap: https://www.treuhaender.online/sitemap-blog.xml
