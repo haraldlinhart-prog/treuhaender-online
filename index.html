@@ -33,33 +33,7 @@
   }
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Matomo -->
-  <script>
-    var _paq = window._paq = window._paq || [];
-    _paq.push(['requireConsent']);
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="https://counter.ixan.org/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
-      _paq.push(['setSiteId', '85']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
-
-  <!-- Statcounter -->
-  <script type="text/javascript">
-  var sc_project=13068534; 
-  var sc_invisible=1; 
-  var sc_security="c3af6adb"; 
-  </script>
-  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13068534/0/c3af6adb/1/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <link href="/fonts/fonts.css" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -275,20 +249,6 @@
     .footer__copy { font-size: .8rem; color: rgba(245,243,238,.35); }
     .impressum { font-size: .78rem; color: rgba(245,243,238,.35); line-height: 1.8; max-width: 520px; }
     .impressum strong { color: rgba(245,243,238,.55); }
-
-    /* ── COOKIE BANNER ── */
-    #cookie-banner {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-      background: #111b27; border-top: 1px solid rgba(184,150,62,.3);
-      padding: 20px 24px; display: none;
-    }
-    #cookie-banner.show { display: block; }
-    .cookie-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
-    .cookie-text { font-size: .85rem; color: rgba(245,243,238,.7); flex: 1; min-width: 260px; }
-    .cookie-text a { color: var(--gold); }
-    .cookie-btns { display: flex; gap: 10px; flex-shrink: 0; }
-    .cookie-accept { background: var(--gold); color: var(--navy); border: none; padding: 9px 20px; border-radius: 3px; font-weight: 600; font-size: .85rem; cursor: pointer; }
-    .cookie-decline { background: transparent; color: rgba(245,243,238,.6); border: 1px solid rgba(245,243,238,.2); padding: 9px 20px; border-radius: 3px; font-size: .85rem; cursor: pointer; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -792,47 +752,12 @@
         Inhaltlich verantwortlich: Harald Linhart<br>
         <strong>Haftungshinweis:</strong> Diese Website dient der allgemeinen Information. Rechtliche Beratung im Einzelfall erfolgt ausschließlich durch zugelassene Rechtsanwälte.
       </div>
-      <div class="footer__copy">© 2026 Treuhänder Online · <a href="#" id="cookie-settings" style="color:rgba(245,243,238,.35)">Cookie-Einstellungen</a></div>
+      <div class="footer__copy">© 2026 Treuhänder Online</div>
     </div>
   </div>
 </footer>
 
-<!-- COOKIE BANNER -->
-<div id="cookie-banner">
-  <div class="cookie-inner">
-    <p class="cookie-text">Wir verwenden Cookies für Analyse und Statistik (Matomo, Statcounter). <a href="#" onclick="return false">Mehr erfahren</a></p>
-    <div class="cookie-btns">
-      <button class="cookie-decline" onclick="cookieDecline()">Ablehnen</button>
-      <button class="cookie-accept" onclick="cookieAccept()">Akzeptieren</button>
-    </div>
-  </div>
-</div>
-
 <script>
-  // Cookie Banner
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) {
-      document.getElementById('cookie-banner').classList.add('show');
-    } else if (consent === 'accepted') {
-      if (window._paq) window._paq.push(['setConsentGiven']);
-    }
-    document.getElementById('cookie-settings').addEventListener('click', function(e) {
-      e.preventDefault();
-      document.getElementById('cookie-banner').classList.add('show');
-    });
-  })();
-
-  function cookieAccept() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').classList.remove('show');
-    if (window._paq) window._paq.push(['setConsentGiven']);
-  }
-  function cookieDecline() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').classList.remove('show');
-  }
-
   // FAQ Accordion
   document.querySelectorAll('.faq-q').forEach(function(q) {
     q.addEventListener('click', function() {
