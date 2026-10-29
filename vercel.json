@@ -1,4 +1,36 @@
 {
+  "redirects": [
+    {
+      "source": "/auslaendische-treuhaender",
+      "destination": "/blog/treuhander-deutschland-wann-sie-einen-treuhander-benotigen-und-was-sie/",
+      "permanent": true
+    },
+    {
+      "source": "/auslaendische-treuhaender/",
+      "destination": "/blog/treuhander-deutschland-wann-sie-einen-treuhander-benotigen-und-was-sie/",
+      "permanent": true
+    },
+    {
+      "source": "/treuhaender-legal",
+      "destination": "/blog/treuhander-pflichten-rechtliche-anforderungen-und-verantwortlichkeiten/",
+      "permanent": true
+    },
+    {
+      "source": "/treuhaender-legal/",
+      "destination": "/blog/treuhander-pflichten-rechtliche-anforderungen-und-verantwortlichkeiten/",
+      "permanent": true
+    },
+    {
+      "source": "/treuhand-auflagen",
+      "destination": "/blog/treuhandvertrag-was-sie-uber-aufbau-inhalte-und-rechtliche-bedeutung-w/",
+      "permanent": true
+    },
+    {
+      "source": "/treuhand-auflagen/",
+      "destination": "/blog/treuhandvertrag-was-sie-uber-aufbau-inhalte-und-rechtliche-bedeutung-w/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
